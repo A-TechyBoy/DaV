@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>DaV - Demo and Video</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap");
+
+            :root {
+                --glow-color: hsl(186 100% 69%);
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: #101010;
+                color: aliceblue;
+                font-family: "Space Grotesk", sans-serif;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 100%;
+                margin: 2rem auto;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+                color: var(--glow-color);
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                opacity: 0.9;
+            }
+
+            .form-container {
+                background: rgba(255, 255, 255, 0.05);
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                margin-top: 2rem;
+            }
+
+            .input-group {
+                margin-bottom: 1.5rem;
+                text-align: left;
+            }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: var(--glow-color);
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 0.8rem;
+                border: 2px solid var(--glow-color);
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .input-group input:focus {
+                outline: none;
+                box-shadow: 0 0 10px var(--glow-color);
+            }
+
+            .btn {
+                background: var(--glow-color);
+                color: #101010;
+                border: none;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                font-size: 1.1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 0.5rem;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 15px var(--glow-color);
+            }
+
+            .result {
+                margin-top: 2rem;
+                padding: 1rem;
+                border: 2px solid var(--glow-color);
+                border-radius: 8px;
+                display: none;
+            }
+
+            .result.show {
+                display: block;
+                animation: fadeIn 0.5s ease;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @media (max-width: 600px) {
+                .container {
+                    padding: 1rem;
+                }
+
+                h1 {
+                    font-size: 2rem;
+                }
+
+                h2 {
+                    font-size: 1.2rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Want to submit a demo link and a video for high seas or something else?</h2>
+            <h2>Well, now you can with...</h2>
+            <h1>DaV - Demo and Video</h1>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <label for="demo">Demo Link:</label>
+                    <input type="url" id="demo" placeholder="Enter your demo URL" />
+                </div>
+                
+                <div class="input-group">
+                    <label for="video">Video Link:</label>
+                    <input type="url" id="video" placeholder="Enter your video URL" />
+                </div>
+
+                <button class="btn" id="generate">Generate Link</button>
+
+                <div class="result" id="result">
+                    <p>Your DaV Link:</p>
+                    <p id="generatedLink"></p>
+                    <button class="btn" id="copy">Copy Link</button>
+                    <button class="btn" id="reset">Create Another</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const demoInput = document.getElementById("demo");
+            const videoInput = document.getElementById("video");
+            const generateBtn = document.getElementById("generate");
+            const copyBtn = document.getElementById("copy");
+            const resetBtn = document.getElementById("reset");
+            const result = document.getElementById("result");
+            const generatedLink = document.getElementById("generatedLink");
+
+            generateBtn.addEventListener("click", () => {
+                if (!demoInput.value || !videoInput.value) {
+                    alert("Please enter both demo and video URLs");
+                    return;
+                }
+
+                const link = `https://dav.atb.quest/DaV?demo=${encodeURIComponent(demoInput.value)}&video=${encodeURIComponent(videoInput.value)}`;
+                generatedLink.textContent = link;
+                result.classList.add("show");
+            });
+
+            copyBtn.addEventListener("click", async () => {
+                try {
+                    await navigator.clipboard.writeText(generatedLink.textContent);
+                    copyBtn.textContent = "Copied!";
+                    setTimeout(() => {
+                        copyBtn.textContent = "Copy Link";
+                    }, 2000);
+                } catch (err) {
+                    alert("Failed to copy link. Please try again.");
+                }
+            });
+
+            resetBtn.addEventListener("click", () => {
+                demoInput.value = "";
+                videoInput.value = "";
+                result.classList.remove("show");
+                generatedLink.textContent = "";
+            });
+        </script>
+    </body>
+</html>
